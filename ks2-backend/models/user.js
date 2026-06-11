@@ -7,6 +7,11 @@ export default (sequelize, DataTypes) => {
         foreignKey: 'sellerId',
         as: 'houses'
       });
+
+      User.hasMany(models.RevokedToken, {
+        foreignKey: 'userId',
+        as: 'revokedTokens'
+      });
     }
   }
 
