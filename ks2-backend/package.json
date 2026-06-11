@@ -5,9 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "migrate": "sequelize-cli db:migrate --config config/config.cjs --env development --migrations-path migrations",
+    "db:ensure": "node scripts/ensureDatabase.js",
+    "db:reset": "node scripts/resetDatabase.js && npm run migrate && npm run seed",
+    "migrate": "npm run db:ensure && sequelize-cli db:migrate --config config/config.cjs --env development --migrations-path migrations",
     "migrate:undo": "sequelize-cli db:migrate:undo --config config/config.cjs --env development --migrations-path migrations",
-    "migrate:status": "sequelize-cli db:migrate:status --config config/config.cjs --env development --migrations-path migrations"
+    "migrate:status": "sequelize-cli db:migrate:status --config config/config.cjs --env development --migrations-path migrations",
+    "seed": "sequelize-cli db:seed:all --config config/config.cjs --env development --seeders-path seeders",
+    "seed:undo": "sequelize-cli db:seed:undo:all --config config/config.cjs --env development --seeders-path seeders"
   },
   "keywords": [],
   "author": "",
