@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import HomePage from './pages/HomePage';
+import ProfilePage from './pages/ProfilePage';
 import NotFoundPage from './pages/NotFoundPage';
 import ProtectedRoute from './routes/ProtectedRoute';
 import PublicOnlyRoute from './routes/PublicOnlyRoute';
@@ -16,6 +17,7 @@ function App() {
 
       <Route element={<ProtectedRoute />}>
         <Route path="/home" element={<HomePage />} />
+        <Route path="/profile" element={<ProfilePage />} />
       </Route>
 
       <Route path="/" element={<Navigate to="/login" replace />} />
