@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import DashboardNav from '../components/DashboardNav';
+import ConfirmModal from '../components/ConfirmModal';
 import HouseForm from '../components/HouseForm';
 import { createHouse, deleteHouse, listHouses, updateHouse } from '../services/houseService';
 import { listUsers } from '../services/userService';
@@ -27,6 +28,7 @@ function HomePage() {
   const [activeHouseForm, setActiveHouseForm] = useState(null);
   const [savingHouse, setSavingHouse] = useState(false);
   const [deletingHouseId, setDeletingHouseId] = useState(null);
+  const [houseDeleteModal, setHouseDeleteModal] = useState({ isOpen: false, houseId: null });
   const [openHouseMenuId, setOpenHouseMenuId] = useState(null);
   const [houseActionError, setHouseActionError] = useState('');
 
@@ -144,10 +146,28 @@ function HomePage() {
     }
   };
 
-  const handleDeleteHouse = async (houseId) => {
-    const confirmed = window.confirm('Eliminar este inmueble?');
+  const handleRequestDeleteHouse = (houseId) => {
+    if (deletingHouseId) {
+      return;
+    }
 
-    if (!confirmed) {
+    setOpenHouseMenuId(null);
+    setHouseActionError('');
+    setHouseDeleteModal({ isOpen: true, houseId });
+  };
+
+  const handleCancelDeleteHouse = () => {
+    if (deletingHouseId) {
+      return;
+    }
+
+    setHouseDeleteModal({ isOpen: false, houseId: null });
+  };
+
+  const handleConfirmDeleteHouse = async () => {
+    const houseId = houseDeleteModal.houseId;
+
+    if (!houseId || deletingHouseId) {
       return;
     }
 
@@ -158,6 +178,7 @@ function HomePage() {
     try {
       await deleteHouse(houseId);
       setHouses((current) => current.filter((house) => house.id !== houseId));
+      setHouseDeleteModal({ isOpen: false, houseId: null });
     } catch (error) {
       setHouseActionError(error.response?.data?.message || 'No se pudo eliminar el inmueble.');
     } finally {
@@ -237,8 +258,8 @@ function HomePage() {
                 {statusKey === 'all'
                   ? 'Todos los inmuebles'
                   : statusKey === 'available'
-                    ? 'Disponibles'
-                    : 'Vendidas'}
+                  ? 'Disponibles'
+                  : 'Vendidas'}
               </button>
             ))}
           </div>
@@ -327,7 +348,7 @@ function HomePage() {
                                     <button
                                       type="button"
                                       className="is-danger"
-                                      onClick={() => handleDeleteHouse(house.id)}
+                                      onClick={() => handleRequestDeleteHouse(house.id)}
                                       disabled={deletingHouseId === house.id}
                                     >
                                       {deletingHouseId === house.id ? 'Eliminando...' : 'Eliminar'}
@@ -345,6 +366,17 @@ function HomePage() {
               </table>
             </div>
           ) : null}
+
+          <ConfirmModal
+            isOpen={houseDeleteModal.isOpen}
+            title="Eliminar inmueble"
+            message="Esta accion eliminara el inmueble de forma permanente."
+            confirmLabel={deletingHouseId ? 'Eliminando...' : 'Eliminar inmueble'}
+            onConfirm={handleConfirmDeleteHouse}
+            onCancel={handleCancelDeleteHouse}
+            confirming={Boolean(deletingHouseId)}
+            danger
+          />
         </section>
       </section>
     </main>

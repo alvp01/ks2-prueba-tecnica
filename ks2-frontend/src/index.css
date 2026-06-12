@@ -356,8 +356,12 @@
   opacity: 0.7;
 }
 
-.dashboard-profile__delete {
-  background: #b42318;
+.dashboard-profile__actions .dashboard-profile__delete {
+  background: #c81e1e;
+}
+
+.dashboard-profile__actions .dashboard-profile__delete:hover {
+  background: #aa1515;
 }
 
 .dashboard-profile__error,
@@ -387,6 +391,83 @@
 .dashboard-profile__back-link:hover {
   color: #273f3b;
   text-decoration: underline;
+}
+
+.confirm-modal__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 18, 22, 0.48);
+  padding: 1rem;
+}
+
+.confirm-modal {
+  width: min(100%, 28rem);
+  border: 1px solid #dcefeb;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 24px 44px -28px rgba(12, 37, 47, 0.55);
+  padding: 1rem;
+}
+
+.confirm-modal__title {
+  margin: 0;
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
+  font-size: 1.1rem;
+  color: #273f3b;
+}
+
+.confirm-modal__message {
+  margin: 0.55rem 0 0;
+  color: #315c54;
+  font-size: 0.94rem;
+  line-height: 1.45;
+}
+
+.confirm-modal__actions {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.55rem;
+}
+
+.confirm-modal__btn {
+  border: 0;
+  border-radius: 10px;
+  background: #315c54;
+  color: #fff;
+  padding: 0.52rem 0.8rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.confirm-modal__btn:hover {
+  background: #294c45;
+}
+
+.confirm-modal__btn:disabled {
+  opacity: 0.72;
+  cursor: not-allowed;
+}
+
+.confirm-modal__btn--secondary {
+  background: #6b7280;
+}
+
+.confirm-modal__btn--secondary:hover {
+  background: #4b5563;
+}
+
+.confirm-modal__btn--danger {
+  background: #c81e1e;
+}
+
+.confirm-modal__btn--danger:hover {
+  background: #aa1515;
 }
 
 .dashboard-header {
@@ -886,6 +967,19 @@
 
   .house-form {
     grid-template-columns: 1fr;
+  }
+
+  .confirm-modal {
+    border-radius: 12px;
+    padding: 0.9rem;
+  }
+
+  .confirm-modal__actions {
+    flex-direction: column-reverse;
+  }
+
+  .confirm-modal__btn {
+    width: 100%;
   }
 
 }

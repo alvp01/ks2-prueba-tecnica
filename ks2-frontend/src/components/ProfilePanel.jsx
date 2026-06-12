@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ConfirmModal from './ConfirmModal';
 import { deleteUser, updateUser } from '../services/userService';
 import { clearAuthSession, getAuthSession, setAuthSession } from '../utils/authStorage';
 
@@ -16,6 +17,7 @@ function ProfilePanel({ currentUser, onProfileUpdated }) {
   const [profileError, setProfileError] = useState('');
   const [profileMessage, setProfileMessage] = useState('');
   const [deletingProfile, setDeletingProfile] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   useEffect(() => {
     setProfileValues((current) => ({
@@ -89,14 +91,25 @@ function ProfilePanel({ currentUser, onProfileUpdated }) {
     }
   };
 
-  const handleDeleteProfile = async () => {
+  const handleRequestDeleteProfile = () => {
     if (!currentUser?.id || deletingProfile) {
       return;
     }
 
-    const confirmed = window.confirm('Eliminar tu perfil? Esto tambien eliminara todos los inmuebles vinculados a tu cuenta.');
+    setProfileError('');
+    setDeleteModalOpen(true);
+  };
 
-    if (!confirmed) {
+  const handleCancelDeleteProfile = () => {
+    if (deletingProfile) {
+      return;
+    }
+
+    setDeleteModalOpen(false);
+  };
+
+  const handleConfirmDeleteProfile = async () => {
+    if (!currentUser?.id || deletingProfile) {
       return;
     }
 
@@ -158,13 +171,24 @@ function ProfilePanel({ currentUser, onProfileUpdated }) {
           <button
             type="button"
             className="dashboard-profile__delete"
-            onClick={handleDeleteProfile}
+            onClick={handleRequestDeleteProfile}
             disabled={deletingProfile || profileSaving}
           >
-            {deletingProfile ? 'Eliminando...' : 'Eliminar perfil'}
+            {deletingProfile ? 'Eliminando...' : 'Eliminar cuenta'}
           </button>
         </div>
       </form>
+
+      <ConfirmModal
+        isOpen={deleteModalOpen}
+        title="Eliminar cuenta"
+        message="Esta accion eliminara tu cuenta y todos los inmuebles vinculados. Esta operacion no se puede deshacer."
+        confirmLabel={deletingProfile ? 'Eliminando...' : 'Eliminar cuenta'}
+        onConfirm={handleConfirmDeleteProfile}
+        onCancel={handleCancelDeleteProfile}
+        confirming={deletingProfile}
+        danger
+      />
     </section>
   );
 }
