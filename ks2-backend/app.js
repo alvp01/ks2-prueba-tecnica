@@ -5,8 +5,14 @@ import authRoutes from './routes/authRoutes.js';
 
 const app = express();
 const apiV1Prefix = '/api/v1';
+const allowedOrigin = process.env.CORS_ORIGIN || 'http://localhost:5173';
 
-app.use(cors());
+app.use(
+  cors({
+    origin: allowedOrigin,
+    credentials: true
+  })
+);
 app.use(express.json());
 
 app.use(`${apiV1Prefix}/auth`, authRoutes);
