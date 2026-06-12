@@ -1,19 +1,29 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { deleteUser, updateUser } from '../services/userService';
 import { clearAuthSession, getAuthSession, setAuthSession } from '../utils/authStorage';
 
+const normalizeProfileValues = (user) => ({
+  name: user?.name || '',
+  email: user?.email || '',
+  password: ''
+});
+
 function ProfilePanel({ currentUser, onProfileUpdated }) {
   const navigate = useNavigate();
-  const [profileValues, setProfileValues] = useState({
-    name: currentUser?.name || '',
-    email: currentUser?.email || '',
-    password: ''
-  });
+  const [profileValues, setProfileValues] = useState(() => normalizeProfileValues(currentUser));
   const [profileSaving, setProfileSaving] = useState(false);
   const [profileError, setProfileError] = useState('');
   const [profileMessage, setProfileMessage] = useState('');
   const [deletingProfile, setDeletingProfile] = useState(false);
+
+  useEffect(() => {
+    setProfileValues((current) => ({
+      ...normalizeProfileValues(currentUser),
+      // Keep what the user is typing in password only until save cycle finishes.
+      password: current.password
+    }));
+  }, [currentUser?.id, currentUser?.name, currentUser?.email]);
 
   const handleProfileFieldChange = (fieldName, value) => {
     setProfileValues((current) => ({
@@ -29,14 +39,25 @@ function ProfilePanel({ currentUser, onProfileUpdated }) {
       return;
     }
 
+    const nextName = profileValues.name.trim();
+    const nextEmail = profileValues.email.trim();
+    const hasPasswordUpdate = Boolean(profileValues.password.trim());
+    const hasProfileChanges = nextName !== (currentUser.name || '') || nextEmail !== (currentUser.email || '');
+
+    if (!hasProfileChanges && !hasPasswordUpdate) {
+      setProfileError('');
+      setProfileMessage('No hay cambios por guardar.');
+      return;
+    }
+
     setProfileSaving(true);
     setProfileError('');
     setProfileMessage('');
 
     try {
       const payload = {
-        name: profileValues.name,
-        email: profileValues.email
+        name: nextName,
+        email: nextEmail
       };
 
       if (profileValues.password.trim()) {

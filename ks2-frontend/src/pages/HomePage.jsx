@@ -5,6 +5,16 @@ import { createHouse, deleteHouse, listHouses, updateHouse } from '../services/h
 import { listUsers } from '../services/userService';
 import { getCurrentUser } from '../utils/authStorage';
 
+const houseMatchesFilter = (house, filter) => {
+  if (filter === 'all') {
+    return true;
+  }
+
+  return house.status === filter;
+};
+
+const sortByIdAsc = (firstHouse, secondHouse) => firstHouse.id - secondHouse.id;
+
 function HomePage() {
   const [currentUser] = useState(() => getCurrentUser());
   const [users, setUsers] = useState([]);
@@ -92,13 +102,41 @@ function HomePage() {
 
     try {
       if (activeHouseForm.mode === 'create') {
-        await createHouse(values);
+        const response = await createHouse(values);
+        const createdHouse = response.house;
+
+        setHouses((current) => {
+          if (!createdHouse || !houseMatchesFilter(createdHouse, houseFilter)) {
+            return current;
+          }
+
+          return [...current, createdHouse].sort(sortByIdAsc);
+        });
       } else {
-        await updateHouse(activeHouseForm.house.id, values);
+        const response = await updateHouse(activeHouseForm.house.id, values);
+        const updatedHouse = response.house;
+
+        setHouses((current) => {
+          if (!updatedHouse) {
+            return current;
+          }
+
+          const existsInCurrentList = current.some((house) => house.id === updatedHouse.id);
+          const shouldBeVisible = houseMatchesFilter(updatedHouse, houseFilter);
+
+          if (!shouldBeVisible) {
+            return current.filter((house) => house.id !== updatedHouse.id);
+          }
+
+          if (!existsInCurrentList) {
+            return [...current, updatedHouse].sort(sortByIdAsc);
+          }
+
+          return current.map((house) => (house.id === updatedHouse.id ? updatedHouse : house));
+        });
       }
 
       setActiveHouseForm(null);
-      await fetchHouses();
     } catch (error) {
       setHouseActionError(error.response?.data?.message || 'No se pudo guardar el inmueble.');
     } finally {
@@ -119,7 +157,7 @@ function HomePage() {
 
     try {
       await deleteHouse(houseId);
-      await fetchHouses();
+      setHouses((current) => current.filter((house) => house.id !== houseId));
     } catch (error) {
       setHouseActionError(error.response?.data?.message || 'No se pudo eliminar el inmueble.');
     } finally {
