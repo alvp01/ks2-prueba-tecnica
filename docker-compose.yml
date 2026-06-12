@@ -1,0 +1,53 @@
+services:
+  db:
+    image: postgres:18.3
+    container_name: ks2-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - ks2-pgdata:/var/lib/postgresql
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./ks2-backend
+      dockerfile: Dockerfile
+    container_name: ks2-backend
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_PORT: 5432
+      DB_HOST: db
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: real_state_management
+      DB_ADMIN_NAME: postgres
+      CORS_ORIGIN: http://localhost:8080
+      JWT_SECRET: 2zOOTZJBFJUX6dbdRetnK51sRkLWqpB86BsypoGnL4I
+      JWT_EXPIRES_IN: 7d
+      PORT: 3000
+      SEED_ON_START: "true"
+    ports:
+      - "3000:3000"
+
+  frontend:
+    build:
+      context: ./ks2-frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: /api/v1
+    container_name: ks2-frontend
+    depends_on:
+      - backend
+    ports:
+      - "8080:80"
+
+volumes:
+  ks2-pgdata:

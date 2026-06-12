@@ -66,6 +66,75 @@ El script realiza automaticamente:
 - Backend: `http://localhost:3000`
 - Frontend: `http://localhost:5173`
 
+## Ejecucion con Docker (recomendado para cualquier sistema)
+
+Se incluye una solucion completa con contenedores para:
+- PostgreSQL 18.3
+- Backend (Node.js + Express)
+- Frontend (Vite build servido por Nginx)
+
+### Archivos Docker agregados
+
+- `docker-compose.yml`
+- `ks2-backend/Dockerfile`
+- `ks2-backend/scripts/docker-entrypoint.sh`
+- `ks2-backend/.dockerignore`
+- `ks2-frontend/Dockerfile`
+- `ks2-frontend/nginx.conf`
+- `ks2-frontend/.dockerignore`
+
+### Levantar todo el stack
+
+Desde la raiz del proyecto (`ks2/`):
+
+```bash
+docker compose up --build
+```
+
+Si vienes de una version anterior de Compose/imagen y falla el arranque de `db`, limpia volumenes y vuelve a levantar:
+
+```bash
+docker-compose down -v --remove-orphans
+docker-compose up --build
+```
+
+Este comando realiza automaticamente:
+1. Construccion de imagenes de frontend y backend.
+2. Inicio de PostgreSQL.
+3. En backend: `db:ensure`, `migrate`, `seed:undo`, `seed` y luego `start`.
+4. Inicio de frontend en Nginx con proxy `/api` hacia el backend.
+
+### URLs con Docker
+
+- Frontend: `http://localhost:8080`
+- Backend (health): `http://localhost:3000/health`
+- API base: `http://localhost:3000/api/v1`
+
+Nota: la base de datos de Docker no se expone al host por defecto para evitar conflictos con PostgreSQL local en `5432`.
+Si necesitas acceso desde tu host, agrega temporalmente este bloque al servicio `db` en `docker-compose.yml`:
+
+```yaml
+ports:
+	- "5433:5432"
+```
+
+### Detener contenedores
+
+```bash
+docker compose down
+```
+
+Si tambien quieres eliminar volumenes (base de datos):
+
+```bash
+docker compose down -v
+```
+
+### Variables de entorno en Docker
+
+Para Docker Compose ya se incluyen valores por defecto en `docker-compose.yml`, por lo que no es obligatorio crear `.env` para la ejecucion en contenedores.
+Si deseas personalizarlos, puedes editar las variables en el servicio `backend` dentro de `docker-compose.yml`.
+
 ## Detener aplicaciones
 
 Presiona `Ctrl+C` en la terminal donde corriste el script.
