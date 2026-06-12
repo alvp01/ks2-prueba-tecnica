@@ -103,7 +103,7 @@ function AuthForm({
                 checked={showPassword}
                 onChange={(event) => setShowPassword(event.target.checked)}
               />
-              <span>Show Password</span>
+              <span>Mostrar contrasena</span>
             </label>
           ) : null}
 
@@ -114,7 +114,7 @@ function AuthForm({
             disabled={!allRequiredFilled || loading}
             className="auth-submit"
           >
-            {loading ? 'Please wait...' : submitLabel}
+            {loading ? 'Por favor espera...' : submitLabel}
           </button>
 
           {helperText ? <div className="auth-helper">{helperText}</div> : null}

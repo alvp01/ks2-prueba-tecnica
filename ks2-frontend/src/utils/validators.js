@@ -2,11 +2,11 @@ export const validateEmail = (value) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   if (!value?.trim()) {
-    return 'Email is required.';
+    return 'El correo es obligatorio.';
   }
 
   if (!emailRegex.test(value.trim())) {
-    return 'Enter a valid email address.';
+    return 'Ingresa un correo valido.';
   }
 
   return '';
@@ -14,11 +14,11 @@ export const validateEmail = (value) => {
 
 export const validatePassword = (value) => {
   if (!value) {
-    return 'Password is required.';
+    return 'La contrasena es obligatoria.';
   }
 
   if (value.length < 8) {
-    return 'Password must be at least 8 characters.';
+    return 'La contrasena debe tener al menos 8 caracteres.';
   }
 
   return '';
@@ -26,11 +26,11 @@ export const validatePassword = (value) => {
 
 export const validateName = (value) => {
   if (!value?.trim()) {
-    return 'Name is required.';
+    return 'El nombre es obligatorio.';
   }
 
   if (value.trim().length < 2) {
-    return 'Name must be at least 2 characters.';
+    return 'El nombre debe tener al menos 2 caracteres.';
   }
 
   return '';

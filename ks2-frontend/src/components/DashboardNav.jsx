@@ -4,7 +4,7 @@ import { logoutUser } from '../services/authService';
 import { clearAuthSession } from '../utils/authStorage';
 import UserSolidIcon from './UserSolidIcon';
 
-function DashboardNav({ email }) {
+function DashboardNav({ userName }) {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -20,8 +20,8 @@ function DashboardNav({ email }) {
   return (
     <nav className="dashboard-nav">
       <div>
-        <p className="dashboard-nav__eyebrow">KS2 Dashboard</p>
-        <p className="dashboard-nav__email">{email || 'Authenticated user'}</p>
+        <p className="dashboard-nav__eyebrow">Panel KS2</p>
+        <p className="dashboard-nav__email">{userName || 'Usuario autenticado'}</p>
       </div>
 
       <div className="dashboard-nav__menu-wrap">
@@ -29,7 +29,7 @@ function DashboardNav({ email }) {
           type="button"
           className="dashboard-nav__icon"
           onClick={() => setMenuOpen((current) => !current)}
-          aria-label="Open user menu"
+          aria-label="Abrir menu de usuario"
         >
           <UserSolidIcon />
         </button>
@@ -44,14 +44,14 @@ function DashboardNav({ email }) {
                 navigate('/profile');
               }}
             >
-              Profile
+              Perfil
             </button>
             <button
               type="button"
               className="dashboard-nav__menu-item dashboard-nav__menu-item--danger"
               onClick={handleLogout}
             >
-              Logout
+              Cerrar sesion
             </button>
           </div>
         ) : null}

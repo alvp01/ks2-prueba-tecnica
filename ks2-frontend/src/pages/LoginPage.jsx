@@ -14,7 +14,7 @@ function LoginPage() {
   const fields = [
     {
       name: 'email',
-      label: 'Email',
+      label: 'Correo',
       type: 'email',
       required: true,
       autoComplete: 'email',
@@ -23,11 +23,11 @@ function LoginPage() {
     },
     {
       name: 'password',
-      label: 'Password',
+      label: 'Contrasena',
       type: 'password',
       required: true,
       autoComplete: 'current-password',
-      placeholder: 'Enter your password',
+      placeholder: 'Ingresa tu contrasena',
       validate: validatePassword
     }
   ];
@@ -41,7 +41,7 @@ function LoginPage() {
       setAuthSession({ token: data.token, user: data.user });
       navigate('/home', { replace: true });
     } catch (error) {
-      setServerError(error.response?.data?.message || 'Login failed. Please try again.');
+      setServerError(error.response?.data?.message || 'Error al iniciar sesion. Intentalo de nuevo.');
     } finally {
       setLoading(false);
     }
@@ -50,22 +50,18 @@ function LoginPage() {
   return (
     <PageShell>
       <AuthForm
-        title="Login"
+        title="Iniciar sesion"
         description=""
         fields={fields}
-        submitLabel="Sign In"
+        submitLabel="Entrar"
         loading={loading}
         serverError={serverError}
         helperText={
           <>
-            <p>
-              Forgot{' '}
-              <span className="auth-link">Username / Password?</span>
-            </p>
             <p className="mt-1">
-              Don't have an account?{' '}
+              No tienes una cuenta?{' '}
               <Link to="/register" className="auth-link">
-                Sign up
+                Registrate
               </Link>
             </p>
           </>

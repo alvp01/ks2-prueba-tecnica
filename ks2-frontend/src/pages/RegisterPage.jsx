@@ -14,16 +14,16 @@ function RegisterPage() {
   const fields = [
     {
       name: 'name',
-      label: 'Full name',
+      label: 'Nombre completo',
       type: 'text',
       required: true,
       autoComplete: 'name',
-      placeholder: 'Jane Doe',
+      placeholder: 'Ana Perez',
       validate: validateName
     },
     {
       name: 'email',
-      label: 'Email',
+      label: 'Correo',
       type: 'email',
       required: true,
       autoComplete: 'email',
@@ -32,11 +32,11 @@ function RegisterPage() {
     },
     {
       name: 'password',
-      label: 'Password',
+      label: 'Contrasena',
       type: 'password',
       required: true,
       autoComplete: 'new-password',
-      placeholder: 'Create a secure password',
+      placeholder: 'Crea una contrasena segura',
       validate: validatePassword
     }
   ];
@@ -50,7 +50,7 @@ function RegisterPage() {
       setAuthSession({ token: data.token, user: data.user });
       navigate('/home', { replace: true });
     } catch (error) {
-      setServerError(error.response?.data?.message || 'Registration failed. Please try again.');
+      setServerError(error.response?.data?.message || 'Error al registrarse. Intentalo de nuevo.');
     } finally {
       setLoading(false);
     }
@@ -59,17 +59,17 @@ function RegisterPage() {
   return (
     <PageShell>
       <AuthForm
-        title="Register"
+        title="Registro"
         description=""
         fields={fields}
-        submitLabel="Create account"
+        submitLabel="Crear cuenta"
         loading={loading}
         serverError={serverError}
         helperText={
           <p>
-            Already have an account?{' '}
+            Ya tienes una cuenta?{' '}
             <Link to="/login" className="auth-link">
-              Sign in
+              Inicia sesion
             </Link>
           </p>
         }

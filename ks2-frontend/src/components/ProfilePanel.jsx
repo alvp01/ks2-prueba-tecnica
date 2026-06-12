@@ -59,10 +59,10 @@ function ProfilePanel({ currentUser, onProfileUpdated }) {
         password: ''
       }));
 
-      setProfileMessage('Profile updated successfully.');
+      setProfileMessage('Perfil actualizado correctamente.');
       onProfileUpdated(updatedUser);
     } catch (error) {
-      setProfileError(error.response?.data?.message || 'Could not update profile.');
+      setProfileError(error.response?.data?.message || 'No se pudo actualizar el perfil.');
     } finally {
       setProfileSaving(false);
     }
@@ -73,9 +73,7 @@ function ProfilePanel({ currentUser, onProfileUpdated }) {
       return;
     }
 
-    const confirmed = window.confirm(
-      'Delete your profile? This will also delete all houses linked to your account.'
-    );
+    const confirmed = window.confirm('Eliminar tu perfil? Esto tambien eliminara todos los inmuebles vinculados a tu cuenta.');
 
     if (!confirmed) {
       return;
@@ -89,18 +87,18 @@ function ProfilePanel({ currentUser, onProfileUpdated }) {
       clearAuthSession();
       navigate('/login', { replace: true });
     } catch (error) {
-      setProfileError(error.response?.data?.message || 'Could not delete profile.');
+      setProfileError(error.response?.data?.message || 'No se pudo eliminar el perfil.');
       setDeletingProfile(false);
     }
   };
 
   return (
     <section className="dashboard-profile">
-      <h2 className="dashboard-profile__title">Profile</h2>
+      <h2 className="dashboard-profile__title">Perfil</h2>
 
       <form className="dashboard-profile__form" onSubmit={handleProfileSave}>
         <label>
-          <span>Name</span>
+          <span>Nombre</span>
           <input
             type="text"
             value={profileValues.name}
@@ -110,7 +108,7 @@ function ProfilePanel({ currentUser, onProfileUpdated }) {
         </label>
 
         <label>
-          <span>Email</span>
+          <span>Correo</span>
           <input
             type="email"
             value={profileValues.email}
@@ -120,12 +118,12 @@ function ProfilePanel({ currentUser, onProfileUpdated }) {
         </label>
 
         <label>
-          <span>New Password (optional)</span>
+          <span>Nueva contrasena (opcional)</span>
           <input
             type="password"
             value={profileValues.password}
             onChange={(event) => handleProfileFieldChange('password', event.target.value)}
-            placeholder="Leave blank to keep current password"
+            placeholder="Dejalo en blanco para mantener la contrasena actual"
           />
         </label>
 
@@ -134,7 +132,7 @@ function ProfilePanel({ currentUser, onProfileUpdated }) {
 
         <div className="dashboard-profile__actions">
           <button type="submit" disabled={profileSaving || deletingProfile}>
-            {profileSaving ? 'Saving...' : 'Save Profile'}
+            {profileSaving ? 'Guardando...' : 'Guardar perfil'}
           </button>
           <button
             type="button"
@@ -142,7 +140,7 @@ function ProfilePanel({ currentUser, onProfileUpdated }) {
             onClick={handleDeleteProfile}
             disabled={deletingProfile || profileSaving}
           >
-            {deletingProfile ? 'Deleting...' : 'Delete Profile'}
+            {deletingProfile ? 'Eliminando...' : 'Eliminar perfil'}
           </button>
         </div>
       </form>
