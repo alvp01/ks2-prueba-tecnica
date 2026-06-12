@@ -70,3 +70,12 @@ El script realiza automaticamente:
 
 Presiona `Ctrl+C` en la terminal donde corriste el script.
 El script intenta detener ambos procesos automaticamente.
+
+## Usuario de prueba
+
+Las credenciales para el usuario de prueba:
+Email: "seller@example.com"
+Password: "password123"
+
+## Video recorrido
+Ver el video [aquí](https://www.loom.com/share/2caf9e03114f455cbc4c135c09bb7198)
